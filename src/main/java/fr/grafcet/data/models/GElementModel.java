@@ -1,17 +1,17 @@
 package fr.grafcet.data.models;
 
-/** Donnée commune à un grafcet */
+/** DonnÃ©e commune Ã  un grafcet */
 public abstract class GElementModel {
 
 	/** Chaine definissent l'element du grafcet */
 	private String name;
 
-	/** Renvoi la chaine définissant l'element */
+	/** Renvoi la chaine dÃ©finissant l'element */
 	public String getName() {
 		return name;
 	}
 
-	/** Positione la chaine définissant l'element */
+	/** Positione la chaine dÃ©finissant l'element */
 	public void setName(String name) {
 		this.name = name;
 	}

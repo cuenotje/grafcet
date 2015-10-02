@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane id="builderBorderPane" prefWidth="800.0" prefHeight="600.0" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <ToolBar>
+            <Region styleClass="spacer" />
+            <HBox styleClass="segmented-button-bar">
+                <Button text="Reinitialiser" />
+                <Button text="Quitter" />
+            </HBox>
+        </ToolBar>
+    </top>
+    <right>
+    	<!-- canvas graph de simulation -->
+    	<Canvas prefWidth="400.0" prefHeight="600.0">
+    	</Canvas>
+    </right>
+    <center>
+    	<!-- canvas de simulation -->
+    	<Canvas prefWidth="400.0" prefHeight="600.0">
+    	</Canvas>
+    </center>
+</BorderPane>

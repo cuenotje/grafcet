@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane id="builderBorderPane" prefWidth="800.0" prefHeight="600.0" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <ToolBar>
+            <Region styleClass="spacer" />
+            <HBox styleClass="segmented-button-bar">
+                <Button text="Search" />
+                <Button text="Load" />
+                <Button text="SaveTo" styleClass="first" />
+                <Button text="Simulate" styleClass="last" />
+            </HBox>
+        </ToolBar>
+    </top>
+    <right>
+    	<!-- grafcet toolbar -->
+    	<FlowPane />
+    </right>
+</BorderPane>
