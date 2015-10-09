@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox id="vbox" prefHeight="400" prefWidth="800"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="fr.grafcet.MainController">
+   <MenuBar fx:id="menuBar" onKeyPressed="#handleKeyInput">
+      <menus>
+         <Menu text="%main.menu.action">
+            <items>
+               <MenuItem fx:id="menuNew" text="%main.menu.new" onAction="#handleAction"/>
+               <MenuItem fx:id="menuOpen" text="%main.menu.open" onAction="#handleAction"/>
+               <!--
+               <MenuItem fx:id="menuSave" text="%main.menu.save" onAction="#handleAction"/>
+               <MenuItem fx:id="menuSaveAs" text="%main.menu.saveAs onAction="#handleAction""/>
+               -->
+               <SeparatorMenuItem  />
+               <MenuItem fx:id="menuExit" text="%main.menu.exit" onAction="#handleAction"/>
+            </items>
+         </Menu>
+         <Menu text="%main.menu.help">
+            <items>
+               <MenuItem text="Search" disable="true" visible="false"/>
+               <MenuItem text="Online Manual" visible="false"/>
+               <SeparatorMenuItem />
+               <MenuItem text="%main.menu.about" onAction="#handleAboutAction"/>
+            </items>
+         </Menu>
+      </menus>
+   </MenuBar>
+</VBox>
