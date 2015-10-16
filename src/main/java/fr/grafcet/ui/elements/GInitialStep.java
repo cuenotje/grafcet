@@ -1,24 +1,31 @@
 package fr.grafcet.ui.elements;
 
-import java.awt.Graphics;
+import javafx.scene.text.Text;
+import javafx.scene.shape.Rectangle;
 
 import fr.grafcet.data.models.GInitialStepModel;
 
 /** Etape initiale d'un grafcet */
 public class GInitialStep extends GElementUI {
 
-	private GInitialStepModel data;
+    private GInitialStepModel data;
 
-	public void paint(Graphics g) {
+    public GInitialStep(GInitialStepModel data) {
+	this.data = data;
+    }
 
-		// les deux carrés
-		g.drawRect((int) getLeftUpperCornerX(), (int) getLeftUpperCornerY(),
-				EDGE_DISTANCE * 2, EDGE_DISTANCE * 2);
-		g.drawRect((int) getLeftUpperCornerX() - 5,
-				(int) getLeftUpperCornerY() - 5, EDGE_DISTANCE * 2 - 10,
-				EDGE_DISTANCE * 2 - 10);
-		// le nom de l'étape initiale
-		g.drawString(data.getName(), (int) getOrigin().getX() - 10,
-				(int) getOrigin().getY());
-	}
+    public void initShape() {
+	getChildren().add(new Rectangle(0, 0, EDGE_DISTANCE * 2, EDGE_DISTANCE * 2));
+	getChildren().add(new Rectangle(5, 5, EDGE_DISTANCE * 2 - 10, EDGE_DISTANCE * 2 - 10));
+	getChildren().add(new Text(10, 20, data.getName()));
+	/**
+	 * * / // les deux carrés getElements().add(new
+	 * Rectangle(getLeftUpperCornerX(), getLeftUpperCornerY(), EDGE_DISTANCE
+	 * * 2, EDGE_DISTANCE * 2)); getElements().add(new
+	 * Rectangle(getLeftUpperCornerX()-5, getLeftUpperCornerY()-5,
+	 * EDGE_DISTANCE * 2-10, EDGE_DISTANCE * 2-10)); // le nom de l'étape
+	 * initiale getElements().add(new Text(getOrigin().getX() - 10,
+	 * getOrigin().getY(), data.getName())); /
+	 **/
+    }
 }

@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane id="builderBorderPane" prefWidth="800.0" prefHeight="600.0" fx:controller="fr.grafcet.ui.builder.GrafcetBuilderController" xmlns:fx="http://javafx.com/fxml">
+<BorderPane prefWidth="800.0" prefHeight="600.0" fx:controller="fr.grafcet.ui.builder.GrafcetBuilderController" xmlns:fx="http://javafx.com/fxml" stylesheets="style.css" styleClass="root">
     <top>
         <ToolBar>
             <Region styleClass="spacer" />
@@ -23,11 +23,11 @@
     </top>
     <right>
     	<!-- grafcet toolbar -->
-    	<FlowPane>
+    	<VBox>
     		<fx:define>
         		<ToggleGroup fx:id="myToggleGroup"/>
     		</fx:define>
-    		<ToggleButton toggleGroup="$myToggleGroup">
+    		<ToggleButton fx:id="initialStepButton" toggleGroup="$myToggleGroup">
 				<graphic>
 					<ImageView>
 						<image>
@@ -36,9 +36,13 @@
 					</ImageView>
 				</graphic>
 			</ToggleButton>
-    	</FlowPane>
+    	</VBox>
     </right>
     <center>
-    	<Canvas fx:id="builderCanvas"></Canvas>
+    <!--
+    	<Canvas id="canvas" fx:id="builderCanvas"></Canvas>
+    -->
+    	<GridPane id="pane" fx:id="builderGridPane" />
+
     </center>
 </BorderPane>

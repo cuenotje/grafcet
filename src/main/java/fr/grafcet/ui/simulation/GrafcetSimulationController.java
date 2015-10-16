@@ -1,4 +1,5 @@
 package fr.grafcet.ui.simulation;
+
 /**
  * Controlleur de simulation d'un grafcet.
  */

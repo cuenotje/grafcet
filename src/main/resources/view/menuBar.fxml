@@ -7,7 +7,7 @@
 
 <VBox id="vbox" prefHeight="400" prefWidth="800"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="fr.grafcet.MainController">
+      fx:controller="fr.grafcet.MainController" stylesheets="style.css" styleClass="root">
    <MenuBar fx:id="menuBar" onKeyPressed="#handleKeyInput">
       <menus>
          <Menu text="%main.menu.action">

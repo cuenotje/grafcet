@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane id="builderBorderPane" prefWidth="800.0" prefHeight="600.0" xmlns:fx="http://javafx.com/fxml">
+<BorderPane id="builderBorderPane" prefWidth="800.0" prefHeight="600.0" xmlns:fx="http://javafx.com/fxml" stylesheets="style.css" styleClass="root">
     <top>
         <ToolBar>
             <Region styleClass="spacer" />
