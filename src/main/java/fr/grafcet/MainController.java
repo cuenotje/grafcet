@@ -90,12 +90,7 @@ public class MainController extends AbstractController implements Initializable 
 	    Scene s = ViewLoaderHelper.loadView(ViewList.GRAFCET_BUILDER_VIEW, getStage());
 	    getStage().setScene(s);
 	} catch (Exception exception) {
-	    exception.printStackTrace();
-	    /**
-	     * * / Dialogs.showErrorDialog(primaryStage,
-	     * "Ooops, there was an error!", "Error Dialog With Exception",
-	     * "title", exception); /
-	     **/
+	    Dialogs.showErrorDialog(getStage(), "Ooops, there was an error!", "Error Dialog With Exception", "title", exception);
 	}
     }
 

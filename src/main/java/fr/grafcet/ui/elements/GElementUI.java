@@ -2,6 +2,7 @@ package fr.grafcet.ui.elements;
 
 import java.awt.Graphics;
 
+import fr.grafcet.data.models.GElementModel;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 
@@ -12,8 +13,11 @@ import javafx.scene.layout.Pane;
  */
 public abstract class GElementUI extends Pane {
 
-    public GElementUI() {
+    private GElementModel data;
+
+    public GElementUI(GElementModel data) {
 	super();
+	this.data = data;
 	initShape();
     }
 
@@ -59,5 +63,9 @@ public abstract class GElementUI extends Pane {
     /** Renvoi l'ordonné du coin en haut à gauche de l'élément */
     public double getLeftUpperCornerY() {
 	return origin.getY() - EDGE_DISTANCE;
+    }
+
+    protected GElementModel getModel() {
+	return data;
     }
 }

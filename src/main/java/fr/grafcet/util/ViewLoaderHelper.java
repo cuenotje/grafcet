@@ -21,8 +21,7 @@ public final class ViewLoaderHelper {
 	final Parent parent = (Parent) fxmlLoader.load(ViewLoaderHelper.class.getClassLoader().getResourceAsStream(view.getViewUrl()));
 	final Scene scene = new Scene(parent);
 	final IGrafcetController controller = fxmlLoader.getController();
-	controller.setStage(container);
-	controller.setScene(scene);
+	controller.initController(container, scene);
 	return scene;
     }
 }

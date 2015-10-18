@@ -85,8 +85,10 @@ public class TargetDragEventHandler implements EventHandler<DragEvent> {
 	Dragboard db = event.getDragboard();
 	boolean success = false;
 	if (db.hasString()) {
+	    String elementName = db.getString();
+	    System.out.println("onDragDropped: add element with id "+elementName);
 	    // construire la cible ici
-	    replaceNode(event, callback.handleBuild(GrafcetElementsEnum.getEnum(((ToggleButton)event.getSource()).getId())));
+	    replaceNode(event, callback.handleBuild(GrafcetElementsEnum.valueOf(elementName)));
 	    success = true;
 	}
 	/*

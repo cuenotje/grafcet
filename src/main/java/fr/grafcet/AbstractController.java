@@ -10,7 +10,8 @@ public abstract class AbstractController implements IGrafcetController {
     private Scene view;
 
     @Override
-    public void setScene(Scene scene) {
+    public void initController(Stage stage, Scene scene) {
+	this.stage = stage;
 	this.view = scene;
     }
 
@@ -20,10 +21,5 @@ public abstract class AbstractController implements IGrafcetController {
 
     protected Stage getStage() {
 	return stage;
-    }
-
-    @Override
-    public void setStage(Stage stage) {
-	this.stage = stage;
     }
 }

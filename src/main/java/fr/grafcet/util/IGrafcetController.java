@@ -5,7 +5,5 @@ import javafx.scene.Scene;
 
 public interface IGrafcetController {
 
-    void setStage(Stage stage);
-
-    void setScene(Scene scene);
+    void initController(Stage stage, Scene scene);
 }

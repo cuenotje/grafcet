@@ -22,7 +22,7 @@ public enum GrafcetElementsEnum {
 	return fxmlId;
     }
 
-    public GrafcetElementsEnum getEnum(String fxmlId) {
+    public static GrafcetElementsEnum getEnum(String fxmlId) {
 	GrafcetElementsEnum[] values = values();
 	for (GrafcetElementsEnum grafcetElementsEnum : values) {
 	    if (grafcetElementsEnum.getFxmlId().equalsIgnoreCase(fxmlId)) {

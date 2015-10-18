@@ -1,11 +1,30 @@
+/*
+ * Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package fr.grafcet.ui.dialogs;
 
-import static fr.grafcet.ui.dialogs.Dialogs.DialogResources.getIcon;
-import static fr.grafcet.ui.dialogs.Dialogs.DialogResources.getMessage;
-import static fr.grafcet.ui.dialogs.Dialogs.DialogResources.getString;
-import static fr.grafcet.ui.dialogs.Dialogs.DialogResponse.CLOSED;
-import static fr.grafcet.ui.dialogs.Dialogs.DialogResponse.OK;
-
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
@@ -39,10 +58,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -64,8 +83,6 @@ import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Callback;
 
-import com.sun.javafx.css.StyleManager;
-
 /**
  * A class containing a number of pre-built JavaFX modal dialogs.
  * <p>
@@ -79,7 +96,6 @@ public class Dialogs {
 
     // !CHANGE START! use a separate css file
     private static final URL DIALOGS_CSS_URL = FXDialog.class.getResource("dialogs.css");
-
     // !CHANGE END!
 
     /***************************************************************************
@@ -203,7 +219,7 @@ public class Dialogs {
     /*
      * Info message string displayed in the masthead Info icon 48x48 displayed
      * in the masthead "OK" button at the bottom.
-     * 
+     *
      * text and title strings are already translated strings.
      */
     public static void showInformationDialog(final Stage owner, final String message, final String masthead, final String title) {
@@ -218,8 +234,8 @@ public class Dialogs {
      * showWarningDialog - displays warning icon instead of "Java" logo icon in
      * the upper right corner of masthead. Has masthead and message that is
      * displayed in the middle part of the dialog. No bullet is displayed.
-     * 
-     * 
+     *
+     *
      * @param owner
      *            - Component to parent the dialog to
      * @param appInfo
@@ -230,7 +246,7 @@ public class Dialogs {
      *            - question to display in the middle part
      * @param title
      *            - dialog title string from resource bundle
-     * 
+     *
      */
     public static DialogResponse showWarningDialog(final Stage owner, final String message) {
 	return showWarningDialog(owner, message, DialogType.WARNING.getDefaultMasthead());
@@ -370,7 +386,7 @@ public class Dialogs {
 	}
 
 	public ImageView getImage() {
-	    return getIcon(imageResource);
+	    return DialogResources.getIcon(imageResource);
 	}
 
 	public String getDefaultTitle() {
@@ -444,7 +460,7 @@ public class Dialogs {
 	    template.show();
 	    return template.getResponse();
 	} catch (Throwable e) {
-	    return CLOSED;
+	    return DialogResponse.CLOSED;
 	}
     }
 
@@ -452,7 +468,7 @@ public class Dialogs {
 	// !CHANGE START! return null if user did not click ok
 	centerToOwner(template);
 	template.show();
-	if (template.getResponse() == OK) {
+	if (template.getResponse() == DialogResponse.OK) {
 	    return template.getInputResponse();
 	} else {
 	    return null;
@@ -467,7 +483,7 @@ public class Dialogs {
 	    template.show();
 	    return template.getResponse();
 	} catch (Throwable e) {
-	    return CLOSED;
+	    return DialogResponse.CLOSED;
 	}
 	// if (template.getResponse() == OK) {
 	// return template.getInputResponse();
@@ -712,7 +728,7 @@ public class Dialogs {
 
 	    mastheadPanel.setLeft(mastheadVBox);
 	    BorderPane.setAlignment(mastheadVBox, Pos.CENTER_LEFT);
-	    mastheadIcon = dialogType == null ? getIcon("java48.image") : dialogType.getImage();
+	    mastheadIcon = dialogType == null ? DialogResources.getIcon("java48.image") : dialogType.getImage();
 	    mastheadPanel.setRight(mastheadIcon);
 
 	    return mastheadPanel;
@@ -865,7 +881,7 @@ public class Dialogs {
 		    // buttons
 		    buttons.addAll(createButton(okBtnStr, DialogResponse.OK, true, false));
 
-		    Button detailsBtn = new Button((detailBtnStr == null) ? "" : getMessage(detailBtnStr));
+		    Button detailsBtn = new Button((detailBtnStr == null) ? "" : DialogResources.getMessage(detailBtnStr));
 		    detailsBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent ae) {
@@ -890,7 +906,7 @@ public class Dialogs {
 	}
 
 	private Button createButton(final String extLabel, final DialogResponse response, final boolean isDefault, final boolean isCancel) {
-	    Button btn = new Button((extLabel == null) ? "" : getMessage(extLabel));
+	    Button btn = new Button((extLabel == null) ? "" : DialogResources.getMessage(extLabel));
 	    btn.setOnAction(new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(ActionEvent ae) {
@@ -935,7 +951,7 @@ public class Dialogs {
 	    if (alertStrs == null || alertStrs.length == 0) {
 		imageFile = SECURITY_ALERT_LOW;
 	    }
-	    securityIcon = getIcon(imageFile);
+	    securityIcon = DialogResources.getIcon(imageFile);
 
 	    // Add icon to the bottom panel.
 	    bottomPanel.getChildren().add(securityIcon);
@@ -1240,11 +1256,13 @@ public class Dialogs {
 	    /*******************************************************************
 	     * * Stylesheet Handling * *
 	     *******************************************************************/
+
+	    // !CHANGE START!
+	    // private static final long PSEUDO_CLASS_ACTIVE_MASK =
+	    // StyleManager.getInstance().getPseudoclassMask("active");
+	    // !CHANGE END!
 	    /**
-	     * * / // !CHANGE START! private static final long
-	     * PSEUDO_CLASS_ACTIVE_MASK =
-	     * StyleManager.getInstance().getPseudoclassMask("active"); //
-	     * !CHANGE END!
+	     *
 	     * 
 	     * @Override public long impl_getPseudoClassState() { long mask =
 	     *           super.impl_getPseudoClassState(); if
@@ -1253,14 +1271,14 @@ public class Dialogs {
 	     * 
 	     *           private void pseudoClassStateChanged(String
 	     *           pseudoClass) {
-	     *           impl_pseudoClassStateChanged(pseudoClass); } /*
-	     */
+	     *           impl_pseudoClassStateChanged(pseudoClass); } /
+	     **/
 	}
     }
 
     private static class ExceptionDialog extends FXDialog {
 	public ExceptionDialog(Stage parent, Throwable throwable) {
-	    super(getMessage("exception.dialog.title"));
+	    super(DialogResources.getMessage("exception.dialog.title"));
 
 	    initModality(Modality.APPLICATION_MODAL);
 
@@ -1273,7 +1291,7 @@ public class Dialogs {
 	    if (throwable != null) {
 		BorderPane labelPanel = new BorderPane();
 
-		Label label = new Label(getString("exception.dialog.label"));
+		Label label = new Label(DialogResources.getString("exception.dialog.label"));
 		labelPanel.setLeft(label);
 
 		contentPanel.getChildren().add(labelPanel);
@@ -1297,7 +1315,7 @@ public class Dialogs {
 	    HBox btnPanel = new HBox();
 	    btnPanel.getStyleClass().add("button-panel");
 
-	    Button dismissBtn = new Button(getMessage("common.close.btn"));
+	    Button dismissBtn = new Button(DialogResources.getMessage("common.close.btn"));
 	    dismissBtn.setPrefWidth(80);
 	    dismissBtn.setOnAction(new EventHandler<ActionEvent>() {
 		@Override
@@ -1366,12 +1384,12 @@ public class Dialogs {
 		    @Override
 		    public ImageView run() {
 			String resourceName = getString(key);
-			URL url = DialogResources.class.getResource(resourceName);
-			if (url == null) {
+			InputStream stream = DialogResources.class.getResourceAsStream(resourceName);
+			if (stream == null) {
 			    System.out.println("Can't create ImageView for key '" + key + "', which has resource name '" + resourceName + "' and URL 'null'");
 			    return null;
 			}
-			return getIcon(url);
+			return getIcon(stream);
 		    }
 		});
 	    } catch (Exception ex) {
@@ -1380,8 +1398,8 @@ public class Dialogs {
 	    }
 	}
 
-	static public ImageView getIcon(URL url) {
-	    return new ImageView(new Image(url.toString()));
+	static public ImageView getIcon(InputStream stream) {
+	    return new ImageView(new Image(stream));
 	}
     }
 }

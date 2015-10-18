@@ -40,6 +40,6 @@ root {
     /* -fx-gridLinesVisible: true */ 
 /* } */
 #canvas {
-	border: 5px solid #f5f5f5;
+	/* border: 5px solid #f5f5f5; */
 	-fx-background-color: white;
 }
