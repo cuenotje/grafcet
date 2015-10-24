@@ -30,16 +30,26 @@ root {
     -fx-background-color: linear-gradient(#61a2b1, #2A5058);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
-/* #pane{ */
+.gridPane {
+	-fx-background-color: white;
+	/* -fx-gridLinesVisible: true; */
+}
+.gridPane-over {
+	-fx-background-color: GAINSBORO;
+	-fx-border-color: grey;
+	/* -fx-gridLinesVisible: true; */
+}
+/* #pane { */
     /* -fx-background-image: url("background_image.jpg"); */
     /* -fx-background-repeat: stretch; */
 	/* -fx-background-color: white; */
+	/* -fx-border-color: grey; */
     /* -fx-background-size: 900 506; */
     /* -fx-background-position: center center; */
     /* -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0); */
-    /* -fx-gridLinesVisible: true */ 
+    /* -fx-gridLinesVisible: true; */ 
 /* } */
-#canvas {
-	/* border: 5px solid #f5f5f5; */
+#grafcet-element {
+	/* -fx-border-color: grey; */
 	-fx-background-color: white;
 }

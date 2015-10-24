@@ -1,8 +1,6 @@
 package fr.grafcet.ui.elements;
 
-import java.awt.Graphics;
-
-import fr.grafcet.data.models.GElementModel;
+import fr.grafcet.data.models.IGElementModel;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 
@@ -13,18 +11,31 @@ import javafx.scene.layout.Pane;
  */
 public abstract class GElementUI extends Pane {
 
-    private GElementModel data;
-
-    public GElementUI(GElementModel data) {
-	super();
-	this.data = data;
-	initShape();
-    }
+    private static final String CSS_ELEMENT_ID = "grafcet-element";
+    private IGElementModel data;
+    private int gridRowIndex, gridColumnIndex;
 
     protected final double EDGE_DISTANCE = 20D;
 
     /** centre de l'element graphique */
     private Point2D origin;
+
+    public GElementUI(IGElementModel data, int gridRowIndex, int gridColumnIndex) {
+	super();
+	setId(CSS_ELEMENT_ID);
+	this.gridRowIndex = gridRowIndex;
+	this.gridColumnIndex = gridColumnIndex;
+	this.data = data;
+	initShape();
+    }
+
+    public int getGridRowIndex() {
+	return gridRowIndex;
+    }
+
+    public int getGridColumnIndex() {
+	return gridColumnIndex;
+    }
 
     /** positionne l'origine de l'element (son centre) */
     public void setOrigin(Point2D origin) {
@@ -65,7 +76,7 @@ public abstract class GElementUI extends Pane {
 	return origin.getY() - EDGE_DISTANCE;
     }
 
-    protected GElementModel getModel() {
+    public IGElementModel getModel() {
 	return data;
     }
 }

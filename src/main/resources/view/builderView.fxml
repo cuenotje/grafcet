@@ -17,7 +17,7 @@
 	            <Region styleClass="spacer" />
                 <Button text="%builder.button.simulate" styleClass="last" />
 	            <Region styleClass="spacer" />
-                <Button text="%builder.button.exit" />
+                <Button text="%builder.button.exit" onAction="#handleGoBack"/>
             </HBox>
         </ToolBar>
     </top>
@@ -36,13 +36,27 @@
 					</ImageView>
 				</graphic>
 			</ToggleButton>
+    		<ToggleButton fx:id="stepButton" toggleGroup="$myToggleGroup">
+				<graphic>
+					<ImageView>
+						<image>
+							<Image url="/images/step.png"/>
+						</image>                            
+					</ImageView>
+				</graphic>
+			</ToggleButton>
+    		<ToggleButton fx:id="transitionButton" toggleGroup="$myToggleGroup">
+				<graphic>
+					<ImageView>
+						<image>
+							<Image url="/images/transition.png"/>
+						</image>                            
+					</ImageView>
+				</graphic>
+			</ToggleButton>
     	</VBox>
     </right>
     <center>
-    <!--
-    	<Canvas id="canvas" fx:id="builderCanvas"></Canvas>
-    -->
-    	<GridPane id="pane" fx:id="builderGridPane" />
-
+    	<GridPane id="pane" fx:id="builderGridPane" styleClass="gridPane"/>
     </center>
 </BorderPane>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Grafcet"
+	xmlns:tns="http://www.example.org/Grafcet" elementFormDefault="qualified">
+	<complexType name="GAbstractStep">
+		<complexContent>
+			<extension base="tns:GGridCoordonate">
+				<attribute name="name" type="string" use="required"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="GInitialStep">
+		<complexContent>
+			<extension base="tns:GAbstractStep"></extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="GTransition">
+		<complexContent>
+			<extension base="tns:GGridCoordonate">
+				<sequence>
+					<element name="condition" type="string"></element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="GAction">
+		<complexContent>
+			<extension base="tns:GGridCoordonate"></extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="GStep">
+		<complexContent>
+			<extension base="tns:GAbstractStep">
+				<sequence>
+					<element name="action" type="tns:GAction"></element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="GGridCoordonate">
+		<attribute name="gridRowIndex" use="required">
+			<simpleType>
+				<restriction base="int">
+					<minExclusive value="0"></minExclusive>
+					<maxExclusive value="20"></maxExclusive>
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="gridColumnIndex" use="required">
+			<simpleType>
+				<restriction base="int">
+					<minExclusive value="0"></minExclusive>
+					<maxExclusive value="20"></maxExclusive>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+
+	<element name="Grafcet">
+		<complexType>
+			<sequence>
+				<element name="InitialStep" type="tns:GInitialStep" />
+				<sequence maxOccurs="unbounded">
+					<choice>
+						<element name="Transition" type="tns:GTransition" />
+						<element name="OrTransition" type="string" />
+						<element name="AndTransition" type="string" />
+					</choice>
+					<element name="step" type="tns:GStep" />
+				</sequence>
+			</sequence>
+		</complexType>
+	</element>
+</schema>

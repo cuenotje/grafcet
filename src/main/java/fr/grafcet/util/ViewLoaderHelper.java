@@ -15,13 +15,13 @@ public final class ViewLoaderHelper {
     }
 
     /** Permet de charger un fichier fxml de vue */
-    public static final Scene loadView(ViewList view, Stage container) throws IOException {
+    public static final IGrafcetController loadView(ViewList view, Stage container, IGrafcetController parent) throws IOException {
 	FXMLLoader fxmlLoader = new FXMLLoader();
 	fxmlLoader.setResources(ResourceBundle.getBundle(view.getBundleUrl()));
-	final Parent parent = (Parent) fxmlLoader.load(ViewLoaderHelper.class.getClassLoader().getResourceAsStream(view.getViewUrl()));
-	final Scene scene = new Scene(parent);
+	final Parent parentPane = (Parent) fxmlLoader.load(ViewLoaderHelper.class.getClassLoader().getResourceAsStream(view.getViewUrl()));
+	final Scene scene = new Scene(parentPane);
 	final IGrafcetController controller = fxmlLoader.getController();
-	controller.initController(container, scene);
-	return scene;
+	controller.initController(container, scene, parent);
+	return controller;
     }
 }

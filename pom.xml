@@ -17,13 +17,31 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-rar-plugin</artifactId> 
 				<version>2.4</version> <configuration> <includeJar>false</includeJar> </configuration> 
 				</plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<lineLength>300</lineLength>
+					<quiet>true</quiet>
+					<packageName>fr.grafcet.persistence.xml</packageName>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

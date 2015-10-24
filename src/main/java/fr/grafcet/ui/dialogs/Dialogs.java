@@ -47,7 +47,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Insets;
@@ -95,12 +94,18 @@ import javafx.util.Callback;
 public class Dialogs {
 
     // !CHANGE START! use a separate css file
-    private static final URL DIALOGS_CSS_URL = FXDialog.class.getResource("dialogs.css");
+    private static URL DIALOGS_CSS_URL = FXDialog.class.getResource("dialogs.css");
     // !CHANGE END!
 
     /***************************************************************************
      * * Public static support classes / enums * *
      **************************************************************************/
+    public static URL getCSS() {
+	if (null == DIALOGS_CSS_URL) {
+	    DIALOGS_CSS_URL = FXDialog.class.getResource("dialogs.css");
+	}
+	return DIALOGS_CSS_URL;
+    }
 
     /**
      * An enumeration used to specify the response provided by the user when
@@ -1065,7 +1070,7 @@ public class Dialogs {
 	    if (stageStyle == StageStyle.DECORATED) {
 		scene = new Scene(root);
 		// !CHANGE START!
-		scene.getStylesheets().addAll(DIALOGS_CSS_URL.toExternalForm());
+		scene.getStylesheets().addAll(getCSS().toExternalForm());
 		// !CHANGE END!
 		setScene(scene);
 		return;
@@ -1085,10 +1090,10 @@ public class Dialogs {
 	    decoratedRoot.getChildren().add(root);
 	    scene = new Scene(decoratedRoot);
 	    // !CHANGE START!
-	    String css = (String) AccessController.doPrivileged(new PrivilegedAction() {
+	    String css = AccessController.doPrivileged(new PrivilegedAction<String>() {
 		@Override
-		public Object run() {
-		    return DIALOGS_CSS_URL.toExternalForm();
+		public String run() {
+		    return getCSS().toExternalForm();
 		}
 	    });
 	    scene.getStylesheets().addAll(css);
@@ -1143,31 +1148,31 @@ public class Dialogs {
 
 	    // add close min max
 	    Button closeButton = createWindowButton("close");
-	    closeButton.setOnAction(new EventHandler() {
+	    closeButton.setOnAction(new EventHandler<ActionEvent>() {
 		@Override
-		public void handle(Event event) {
+		public void handle(ActionEvent event) {
 		    FXDialog.this.hide();
 		}
 	    });
 	    minButton = createWindowButton("minimize");
-	    minButton.setOnAction(new EventHandler() {
+	    minButton.setOnAction(new EventHandler<ActionEvent>() {
 		@Override
-		public void handle(Event event) {
+		public void handle(ActionEvent event) {
 		    setIconified(!isIconified());
 		}
 	    });
 
 	    maxButton = createWindowButton("maximize");
-	    maxButton.setOnAction(new EventHandler() {
+	    maxButton.setOnAction(new EventHandler<ActionEvent>() {
 		private double restoreX;
 		private double restoreY;
 		private double restoreW;
 		private double restoreH;
 
 		@Override
-		public void handle(Event event) {
-		    Screen screen = Screen.getPrimary(); // todo something more
-							 // sensible
+		public void handle(ActionEvent event) {
+		    // todo something more sensible
+		    Screen screen = Screen.getPrimary();
 		    double minX = screen.getVisualBounds().getMinX();
 		    double minY = screen.getVisualBounds().getMinY();
 		    double maxW = screen.getVisualBounds().getWidth();
@@ -1209,7 +1214,7 @@ public class Dialogs {
 
 		@Override
 		public void handle(MouseEvent event) {
-		    EventType type = event.getEventType();
+		    EventType<? extends MouseEvent> type = event.getEventType();
 
 		    if (type == MouseEvent.MOUSE_PRESSED) {
 			width = getWidth();

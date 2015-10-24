@@ -5,5 +5,5 @@ package fr.grafcet.ui.elements;
  */
 public interface IElementBuilderCallback {
 
-    GElementUI handleBuild(GrafcetElementsEnum elementType);
+    GElementUI handleBuild(GrafcetElementsEnum elementType, int gridRowIndex, int gridColumnIndex);
 }

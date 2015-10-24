@@ -1,6 +1,8 @@
 package fr.grafcet.ui.elements;
 
-import fr.grafcet.data.models.GInitialStepModel;
+import fr.grafcet.data.models.InitialStepModel;
+import fr.grafcet.data.models.StepModel;
+import fr.grafcet.data.models.GTransitionModel;
 import fr.grafcet.ui.dialogs.Dialogs;
 import javafx.stage.Stage;
 
@@ -18,23 +20,40 @@ public class ElementBuilderController implements IElementBuilderCallback {
     }
 
     @Override
-    public GElementUI handleBuild(GrafcetElementsEnum elementType) {
+    public GElementUI handleBuild(GrafcetElementsEnum elementType, int gridRowIndex, int gridColumnIndex) {
 	GElementUI result = null;
 	switch (elementType) {
 	case INITIAL_STEP:
-	    result = buildInitialStep();
+	    result = buildInitialStep(gridRowIndex, gridColumnIndex);
 	    break;
-
+	case STEP:
+	    result = buildStep(gridRowIndex, gridColumnIndex);
+	    break;
+	case TRANSITION:
+	    result = buildTransition(gridRowIndex, gridColumnIndex);
+	    break;
 	default:
 	    break;
 	}
 	return result;
     }
 
-    private GElementUI buildInitialStep() {
+    private GElementUI buildInitialStep(int gridRowIndex, int gridColumnIndex) {
 	String name = Dialogs.showInputDialog(stage, "Saisir le numero de l'étape.");
-	GInitialStepModel model = new GInitialStepModel();
+	InitialStepModel model = new InitialStepModel();
 	model.setName(name);
-	return GElementAbstractFactory.createGInitialStep(model);
+	return GElementAbstractFactory.createGInitialStep(model, gridRowIndex, gridColumnIndex);
+    }
+    private GElementUI buildStep(int gridRowIndex, int gridColumnIndex) {
+	String name = Dialogs.showInputDialog(stage, "Saisir le numero de l'étape.");
+	StepModel model = new StepModel();
+	model.setName(name);
+	return GElementAbstractFactory.createGStep(model, gridRowIndex, gridColumnIndex);
+    }
+    private GElementUI buildTransition(int gridRowIndex, int gridColumnIndex) {
+	String condition = Dialogs.showInputDialog(stage, "Saisir la condition booleenne.");
+	GTransitionModel model = new GTransitionModel();
+	model.setCondition(condition);
+	return GElementAbstractFactory.createGTransition(model, gridRowIndex, gridColumnIndex);
     }
 }

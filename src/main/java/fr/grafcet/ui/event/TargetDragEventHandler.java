@@ -1,17 +1,16 @@
 package fr.grafcet.ui.event;
 
+import fr.grafcet.ui.elements.GElementUI;
+import fr.grafcet.ui.elements.GInitialStepUI;
+import fr.grafcet.ui.elements.GrafcetElementsEnum;
+import fr.grafcet.ui.elements.IElementBuilderCallback;
+import fr.grafcet.util.GrafcetRepository;
 import javafx.event.EventHandler;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.input.Dragboard;
-import javafx.scene.control.ToggleButton;
-
-import fr.grafcet.ui.elements.GElementUI;
-import fr.grafcet.ui.elements.IElementBuilderCallback;
-import fr.grafcet.ui.elements.GrafcetElementsEnum;
 
 public class TargetDragEventHandler implements EventHandler<DragEvent> {
 
@@ -51,66 +50,51 @@ public class TargetDragEventHandler implements EventHandler<DragEvent> {
     }
 
     private void onDragEntered(DragEvent event) {
-	/* the drag-and-drop gesture entered the target */
-	System.out.println("onDragEntered");
-	/* show to the user that it is an actual gesture target */
 	if (event.getGestureSource() != pane && event.getDragboard().hasString()) {
-	    pane.setStyle("-fx-background-color: green;");
+	    pane.getStyleClass().clear();
+	    pane.getStyleClass().add("gridPane-over");
 	}
 	event.consume();
     }
 
     private void onDragOver(DragEvent event) {
-	System.out.println("onDragOver");
-	/*
-	 * accept it only if it is not dragged from the same node and if it has
-	 * a string data
-	 */
 	if (event.getGestureSource() != pane && event.getDragboard().hasString()) {
-	    /* allow for both copying and moving, whatever user chooses */
 	    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
 	}
 	event.consume();
     }
 
     private void onDragExited(DragEvent event) {
-	pane.setStyle("-fx-background-color: white;");
+	if (event.getGestureSource() != pane) {
+	    pane.getStyleClass().clear();
+	    pane.getStyleClass().add("gridPane");
+	}
 	event.consume();
     }
 
     private void onDragDropped(DragEvent event) {
-	/* data dropped */
-	System.out.println("onDragDropped");
-	/* if there is a string data on dragboard, read it and use it */
 	Dragboard db = event.getDragboard();
 	boolean success = false;
 	if (db.hasString()) {
 	    String elementName = db.getString();
-	    System.out.println("onDragDropped: add element with id "+elementName);
-	    // construire la cible ici
-	    replaceNode(event, callback.handleBuild(GrafcetElementsEnum.valueOf(elementName)));
+	    System.out.println("onDragDropped: add element of type: " + elementName);
+	    // construction du noeud cible
+	    replaceNode(event, callback.handleBuild(GrafcetElementsEnum.valueOf(elementName), GridPane.getRowIndex(pane), GridPane.getColumnIndex(pane)));
 	    success = true;
 	}
-	/*
-	 * let the source know whether the string was successfully transferred
-	 * and used
-	 */
 	event.setDropCompleted(success);
 	event.consume();
     }
 
     private void replaceNode(DragEvent event, GElementUI newNode) {
-	for (Node node : container.getChildren()) {
-	    if (node instanceof Pane) {
-		if (node.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())) {
-		    System.out.println("Node: " + node + " at " + GridPane.getRowIndex(node) + "/" + GridPane.getColumnIndex(node));
-		    int rowIndex = GridPane.getRowIndex(node);
-		    int colIndex = GridPane.getColumnIndex(node);
-		    container.getChildren().remove(node);
-		    container.add(newNode, rowIndex, colIndex);
-		    break;
-		}
-	    }
+	System.out.println("Current Pane: " + pane + " at " + GridPane.getRowIndex(pane) + "/" + GridPane.getColumnIndex(pane));
+	int rowIndex = GridPane.getRowIndex(pane);
+	int colIndex = GridPane.getColumnIndex(pane);
+	container.getChildren().remove(pane);
+	container.add(newNode, colIndex, rowIndex);
+	// ajout dans le repository que si etape initiale
+	if (newNode instanceof GInitialStepUI) {
+	    GrafcetRepository.getInstance().addNewGrafcet((GInitialStepUI) newNode);
 	}
     }
 }

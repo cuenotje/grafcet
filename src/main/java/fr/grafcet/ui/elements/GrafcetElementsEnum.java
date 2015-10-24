@@ -6,7 +6,12 @@ package fr.grafcet.ui.elements;
 public enum GrafcetElementsEnum {
 
     /** etape initiale */
-    INITIAL_STEP("initialStepButton");
+    INITIAL_STEP("initialStepButton"),
+    /** etape avec action */
+    STEP("stepButton"),
+    /** transition */
+    TRANSITION("transitionButton")
+    ;
 
     private String fxmlId;
 

@@ -1,25 +1,24 @@
 package fr.grafcet;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.application.Application;
+import fr.grafcet.ui.builder.GrafcetBuilderController;
+import fr.grafcet.ui.dialogs.Dialogs;
+import fr.grafcet.util.IGrafcetController;
+import fr.grafcet.util.ViewList;
+import fr.grafcet.util.ViewLoaderHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import fr.grafcet.ui.builder.GrafcetBuilderController;
-import fr.grafcet.ui.dialogs.Dialogs;
-import fr.grafcet.util.IGrafcetController;
-import fr.grafcet.util.ViewList;
-import fr.grafcet.util.ViewLoaderHelper;
 
 /**
  * Controlleur de la fenetre principale.
@@ -29,7 +28,8 @@ public class MainController extends AbstractController implements Initializable 
     @FXML
     private MenuBar menuBar;
 
-    private GrafcetBuilderController grafcetBuilderControler;
+    private ResourceBundle resourceBundle;
+    private GrafcetBuilderController builderController;
 
     /**
      * Handle action related to "About" menu item.
@@ -48,8 +48,18 @@ public class MainController extends AbstractController implements Initializable 
 	if (event.getSource() instanceof MenuItem) {
 	    sourceId = ((MenuItem) event.getSource()).getId();
 	}
-	if ("menuNew".equalsIgnoreCase(sourceId)) {
+	switch (sourceId) {
+	case "menuNew":
 	    openGrafcetBuilder();
+	    break;
+	case "menuOpen":
+	    openGrafcetBuilder();
+	    loadGrafcet();
+	    break;
+	case "menuExit":
+	default:
+	    System.exit(0);
+	    break;
 	}
     }
 
@@ -81,21 +91,41 @@ public class MainController extends AbstractController implements Initializable 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-	menuBar.setUseSystemMenuBar(true);
+	this.resourceBundle = resourceBundle;
+    }
+
+    @Override
+    public void initController(Stage stage, Scene scene, IGrafcetController parent) {
+	super.initController(stage, scene, parent);
+	getStage().setTitle(resourceBundle.getString("main.window.title"));
+	getStage().getIcons().add(new Image("images/g7.png"));
     }
 
     /** Chargement ecran de construction d'un grafcet */
     private void openGrafcetBuilder() {
-	try {
-	    Scene s = ViewLoaderHelper.loadView(ViewList.GRAFCET_BUILDER_VIEW, getStage());
-	    getStage().setScene(s);
-	} catch (Exception exception) {
-	    Dialogs.showErrorDialog(getStage(), "Ooops, there was an error!", "Error Dialog With Exception", "title", exception);
+	if (null == builderController) {
+	    try {
+		builderController = (GrafcetBuilderController) ViewLoaderHelper.loadView(ViewList.GRAFCET_BUILDER_VIEW, getStage(), this);
+	    } catch (Exception exception) {
+		Dialogs.showErrorDialog(getStage(), "Ooops, there was an error!", "Error Dialog With Exception", "title", exception);
+	    }
+	}
+	if (null != builderController) {
+	    getStage().setScene(builderController.getScene());
 	}
     }
 
-    /** Chargement écran principal contenant le menu */
-    private void openMainView() {
+    @Override
+    public void handleChildClosing() {
+	// on ré ouvre l'ecran principale
 	getStage().setScene(getScene());
+    }
+
+    public ResourceBundle getBundle() {
+	return resourceBundle;
+    }
+
+    private void loadGrafcet() {
+	// TODO
     }
 }

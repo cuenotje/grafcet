@@ -14,7 +14,7 @@ public class ApplicationLoaderController extends Application {
     /** {@inheritDoc} */
     public void start(Stage primaryStage) throws Exception {
 	try {
-	    primaryStage.setScene(ViewLoaderHelper.loadView(ViewList.MAIN_VIEW, primaryStage));
+	    primaryStage.setScene(ViewLoaderHelper.loadView(ViewList.MAIN_VIEW, primaryStage, null).getScene());
 	    primaryStage.show();
 	} catch (Exception exception) {
 	    Dialogs.showErrorDialog(primaryStage, "Ooops, there was an error!", "Error Dialog With Exception", "title", exception);
