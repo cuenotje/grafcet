@@ -1,5 +1,6 @@
 package fr.grafcet;
 
+import fr.grafcet.persistence.GrafcetPersistenceController;
 import fr.grafcet.util.IGrafcetController;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -9,6 +10,7 @@ public abstract class AbstractController implements IGrafcetController {
     private Stage stage;
     private Scene view;
     private IGrafcetController parent;
+    private GrafcetPersistenceController persistenceController;
 
     @Override
     public void initController(Stage stage, Scene scene, IGrafcetController parent) {
@@ -32,5 +34,12 @@ public abstract class AbstractController implements IGrafcetController {
 
     @Override
     public void handleChildClosing() {
+    }
+
+    protected GrafcetPersistenceController getPersistenceController() {
+	if (null == persistenceController) {
+	    persistenceController = new GrafcetPersistenceController(getStage());
+	}
+	return persistenceController;
     }
 }

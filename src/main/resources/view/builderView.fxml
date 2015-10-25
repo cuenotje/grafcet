@@ -12,8 +12,8 @@
         <ToolBar>
             <Region styleClass="spacer" />
             <HBox styleClass="segmented-button-bar">
-                <Button text="%builder.button.save" />
-                <Button text="%builder.button.saveto" styleClass="first" />
+                <Button text="%builder.button.save" onAction="#handleSave"/>
+                <Button text="%builder.button.saveto" styleClass="first" onAction="#handleSaveTo" />
 	            <Region styleClass="spacer" />
                 <Button text="%builder.button.simulate" styleClass="last" />
 	            <Region styleClass="spacer" />

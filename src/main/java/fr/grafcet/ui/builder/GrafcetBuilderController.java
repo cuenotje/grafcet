@@ -73,6 +73,8 @@ public class GrafcetBuilderController extends AbstractController {
 	stepButton.setOnDragDetected(new SourceDragEventHandler(stepButton, GrafcetElementsEnum.STEP));
 	transitionButton.setOnDragDetected(new SourceDragEventHandler(transitionButton, GrafcetElementsEnum.TRANSITION));
 	getScene().setCursor(Cursor.DEFAULT);
+	// nommage du projet
+	getPersistenceController().initProject();
     }
 
     public ElementBuilderController getBuilderController() {
@@ -81,12 +83,21 @@ public class GrafcetBuilderController extends AbstractController {
 	}
 	return builderController;
     }
-    
 
     @FXML
     private void handleGoBack(final ActionEvent event) {
 	// sauvegarde grafcet en cours
 	// retour ecran d'accueil
 	closeView();
+    }
+
+    @FXML
+    private void handleSave(final ActionEvent event) {
+	getPersistenceController().save();
+    }
+
+    @FXML
+    private void handleSaveTo(final ActionEvent event) {
+	getPersistenceController().saveTo();
     }
 }

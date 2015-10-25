@@ -1,5 +1,6 @@
 package fr.grafcet.bd;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -42,10 +43,15 @@ public class XMLGrafcetPersister extends GrafcetBD {
     }
 
     @Override
-    public void saveGrafcet(GInitialStepUI grafcet, String projectName) throws IOException {
-	Path defaultSaveFolder = getDefautlStorePath();
+    public void saveGrafcet(GInitialStepUI grafcet, String projectName, File saveDirectory) throws IOException {
+	Path pathToSaved = null;
+	if (null != saveDirectory) {
+	    pathToSaved = Paths.get(saveDirectory.toURI());
+	} else {
+	    pathToSaved = getDefautlStorePath();
+	}
 	// Sérialisation des grafcets
-	persists(convertToXmlObject(grafcet), defaultSaveFolder, projectName);
+	persists(convertToXmlObject(grafcet), pathToSaved, projectName);
     }
 
     private void persists(Grafcet grafcet, Path outputDir, String projectName) throws IOException {

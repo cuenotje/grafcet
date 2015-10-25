@@ -1,6 +1,8 @@
 package fr.grafcet.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fr.grafcet.ui.elements.GInitialStepUI;
@@ -28,5 +30,9 @@ public final class GrafcetRepository {
 
     public GInitialStepUI getGrafcet(String grafcetKey) {
 	return currentGraph.get(grafcetKey);
+    }
+
+    public List<GInitialStepUI> getAll() {
+	return new ArrayList<GInitialStepUI>(currentGraph.values());
     }
 }

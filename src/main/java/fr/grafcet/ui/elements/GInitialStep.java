@@ -7,8 +7,8 @@ import javafx.scene.text.Text;
 /** Etape initiale d'un grafcet */
 public class GInitialStep extends GElementUI {
 
-    public GInitialStep(GInitialStepModel data) {
-	super(data);
+    public GInitialStep(GInitialStepModel data, int gridRowIndex, int gridColumnIndex) {
+	super(data, gridRowIndex, gridColumnIndex);
     }
 
     public void initShape() {
@@ -28,7 +28,7 @@ public class GInitialStep extends GElementUI {
     }
 
     @Override
-    protected GInitialStepModel getModel() {
+    public GInitialStepModel getModel() {
 	return (GInitialStepModel) super.getModel();
     }
 }

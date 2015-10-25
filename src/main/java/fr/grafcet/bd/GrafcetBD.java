@@ -1,5 +1,6 @@
 package fr.grafcet.bd;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,5 +22,5 @@ public abstract class GrafcetBD {
     public abstract List<GInitialStepUI> getExistingGrafcet() throws IOException;
 
     /** sauvegarde de grafcet */
-    public abstract void saveGrafcet(GInitialStepUI grafcet, String projectName) throws IOException;
+    public abstract void saveGrafcet(GInitialStepUI grafcet, String projectName, File saveDirectory) throws IOException;
 }
