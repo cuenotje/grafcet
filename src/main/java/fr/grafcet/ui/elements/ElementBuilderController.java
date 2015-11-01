@@ -1,8 +1,5 @@
 package fr.grafcet.ui.elements;
 
-import fr.grafcet.data.models.InitialStepModel;
-import fr.grafcet.data.models.StepModel;
-import fr.grafcet.data.models.GTransitionModel;
 import fr.grafcet.ui.dialogs.Dialogs;
 import javafx.stage.Stage;
 
@@ -26,6 +23,9 @@ public class ElementBuilderController implements IElementBuilderCallback {
 	case INITIAL_STEP:
 	    result = buildInitialStep(gridRowIndex, gridColumnIndex);
 	    break;
+	case ACTION:
+	    result = buildAction(gridRowIndex, gridColumnIndex);
+	    break;
 	case STEP:
 	    result = buildStep(gridRowIndex, gridColumnIndex);
 	    break;
@@ -38,22 +38,35 @@ public class ElementBuilderController implements IElementBuilderCallback {
 	return result;
     }
 
-    private GElementUI buildInitialStep(int gridRowIndex, int gridColumnIndex) {
+    private GInitialStepUI buildInitialStep(int gridRowIndex, int gridColumnIndex) {
+	GInitialStepUI result = GElementAbstractFactory.createGInitialStep(gridRowIndex, gridColumnIndex);
 	String name = Dialogs.showInputDialog(stage, "Saisir le numero de l'étape.");
-	InitialStepModel model = new InitialStepModel();
-	model.setName(name);
-	return GElementAbstractFactory.createGInitialStep(model, gridRowIndex, gridColumnIndex);
+	result.setName(name);
+	result.initShape();
+	return result;
     }
-    private GElementUI buildStep(int gridRowIndex, int gridColumnIndex) {
+
+    private GStepUI buildStep(int gridRowIndex, int gridColumnIndex) {
+	GStepUI result = GElementAbstractFactory.createGStep(gridRowIndex, gridColumnIndex);
 	String name = Dialogs.showInputDialog(stage, "Saisir le numero de l'étape.");
-	StepModel model = new StepModel();
-	model.setName(name);
-	return GElementAbstractFactory.createGStep(model, gridRowIndex, gridColumnIndex);
+	result.setName(name);
+	result.initShape();
+	return result;
     }
-    private GElementUI buildTransition(int gridRowIndex, int gridColumnIndex) {
+
+    private GTransitionUI buildTransition(int gridRowIndex, int gridColumnIndex) {
+	GTransitionUI result = GElementAbstractFactory.createGTransition(gridRowIndex, gridColumnIndex);
 	String condition = Dialogs.showInputDialog(stage, "Saisir la condition booleenne.");
-	GTransitionModel model = new GTransitionModel();
-	model.setCondition(condition);
-	return GElementAbstractFactory.createGTransition(model, gridRowIndex, gridColumnIndex);
+	result.setCondition(condition);
+	result.initShape();
+	return result;
+    }
+
+    private GStepActionUI buildAction(int gridRowIndex, int gridColumnIndex) {
+	GStepActionUI result = GElementAbstractFactory.createGStepAction(gridRowIndex, gridColumnIndex);
+	String action = Dialogs.showInputDialog(stage, "Saisir la sortie à activer.");
+	result.setAction(action);
+	result.initShape();
+	return result;
     }
 }

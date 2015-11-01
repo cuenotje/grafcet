@@ -1,14 +1,15 @@
-package fr.grafcet.ui.elements;
+package fr.grafcet.ui.elements.lines;
 
+import fr.grafcet.ui.elements.GElementUI;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 /** Transition d'un grafcet */
-public class GTransitionUI extends GElementUI {
+public class GOrientedLineUI extends GElementUI {
 
     private String condition;
 
-    public GTransitionUI(int gridRowIndex, int gridColumnIndex) {
+    public GOrientedLineUI(int gridRowIndex, int gridColumnIndex) {
 	super(gridRowIndex, gridColumnIndex);
     }
 

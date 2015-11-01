@@ -2,7 +2,7 @@ package fr.grafcet.ui.builder;
 
 import fr.grafcet.AbstractController;
 import fr.grafcet.ui.elements.ElementBuilderController;
-import fr.grafcet.ui.elements.GrafcetElementsEnum;
+import fr.grafcet.ui.elements.GInitialStepUI;
 import fr.grafcet.ui.event.SourceDragEventHandler;
 import fr.grafcet.ui.event.TargetDragEventHandler;
 import fr.grafcet.ui.event.TargetDragEventHandler.DragPhase;
@@ -10,6 +10,7 @@ import fr.grafcet.util.IGrafcetController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.ColumnConstraints;
@@ -33,6 +34,8 @@ public class GrafcetBuilderController extends AbstractController {
     @FXML
     private ToggleButton stepButton;
     @FXML
+    private ToggleButton actionButton;
+    @FXML
     private ToggleButton transitionButton;
 
     private ElementBuilderController builderController;
@@ -40,6 +43,14 @@ public class GrafcetBuilderController extends AbstractController {
     @Override
     public void initController(Stage stage, Scene scene, IGrafcetController parent) {
 	super.initController(stage, scene, parent);
+	// initialisation des sources pour le drag and drop
+	initialStepButton.setOnDragDetected(new SourceDragEventHandler(initialStepButton));
+	stepButton.setOnDragDetected(new SourceDragEventHandler(stepButton));
+	actionButton.setOnDragDetected(new SourceDragEventHandler(actionButton));
+	transitionButton.setOnDragDetected(new SourceDragEventHandler(transitionButton));
+    }
+
+    public void initGrid() {
 	getScene().setCursor(Cursor.WAIT);
 	// builderGridPane.setGridLinesVisible(true);
 	// initialisation de la grille et de la target pour le drag and drop
@@ -67,14 +78,7 @@ public class GrafcetBuilderController extends AbstractController {
 		builderGridPane.add(pane, i, j);
 	    }
 	}
-	//
-	// initialisation des sources pour le drag and drop
-	initialStepButton.setOnDragDetected(new SourceDragEventHandler(initialStepButton, GrafcetElementsEnum.INITIAL_STEP));
-	stepButton.setOnDragDetected(new SourceDragEventHandler(stepButton, GrafcetElementsEnum.STEP));
-	transitionButton.setOnDragDetected(new SourceDragEventHandler(transitionButton, GrafcetElementsEnum.TRANSITION));
 	getScene().setCursor(Cursor.DEFAULT);
-	// nommage du projet
-	getPersistenceController().initProject();
     }
 
     public ElementBuilderController getBuilderController() {
@@ -87,8 +91,23 @@ public class GrafcetBuilderController extends AbstractController {
     @FXML
     private void handleGoBack(final ActionEvent event) {
 	// sauvegarde grafcet en cours
+	// TODO
+	// suppression des listeners sur la grille
+	cleanGridListener();
 	// retour ecran d'accueil
 	closeView();
+    }
+
+    private void cleanGridListener() {
+	builderGridPane.getColumnConstraints().clear();
+	builderGridPane.getRowConstraints().clear();
+	for (Node node : builderGridPane.getChildren()) {
+	    node.setOnDragEntered(null);
+	    node.setOnDragExited(null);
+	    node.setOnDragOver(null);
+	    node.setOnDragDropped(null);
+	}
+	builderGridPane.getChildren().clear();
     }
 
     @FXML
@@ -99,5 +118,16 @@ public class GrafcetBuilderController extends AbstractController {
     @FXML
     private void handleSaveTo(final ActionEvent event) {
 	getPersistenceController().saveTo();
+    }
+
+    public void initProjectNameAndLoadGrafcet(GInitialStepUI initialStep) {
+	String projectName = null;
+	if (null != initialStep) {
+	    projectName = initialStep.getProjectName();
+	    // chargement du grafcet
+	    // FIXME
+	}
+	// nommage du projet
+	getPersistenceController().initProject(projectName);
     }
 }

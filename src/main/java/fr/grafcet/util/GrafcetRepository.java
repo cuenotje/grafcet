@@ -25,7 +25,7 @@ public final class GrafcetRepository {
     }
 
     public void addNewGrafcet(GInitialStepUI initialStep) {
-	currentGraph.put(initialStep.getModel().getName(), initialStep);
+	currentGraph.put(initialStep.getName(), initialStep);
     }
 
     public GInitialStepUI getGrafcet(String grafcetKey) {

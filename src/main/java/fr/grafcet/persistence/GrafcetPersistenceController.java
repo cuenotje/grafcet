@@ -36,7 +36,7 @@ public class GrafcetPersistenceController {
 	if (null != currentProjectName) {
 	    List<GInitialStepUI> grafcets = GrafcetRepository.getInstance().getAll();
 	    for (GInitialStepUI gInitialStepUI : grafcets) {
-		gInitialStepUI.getModel().setProjectName(currentProjectName);
+		gInitialStepUI.setProjectName(currentProjectName);
 		try {
 		    GrafcetBD.getInstance().saveGrafcet(gInitialStepUI, currentProjectName, saveDirectory);
 		} catch (IOException e) {
@@ -54,8 +54,12 @@ public class GrafcetPersistenceController {
 	save();
     }
 
-    public void initProject() {
-	currentProjectName = getProjectName();
+    public void initProject(String projectName) {
+	if (null != projectName) {
+	    currentProjectName = projectName;
+	} else {
+	    currentProjectName = getProjectName();
+	}
     }
 
     private String getProjectName() {

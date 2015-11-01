@@ -10,8 +10,9 @@ public enum GrafcetElementsEnum {
     /** etape avec action */
     STEP("stepButton"),
     /** transition */
-    TRANSITION("transitionButton")
-    ;
+    TRANSITION("transitionButton"),
+    /** action d'une étape */
+    ACTION("actionButton");
 
     private String fxmlId;
 

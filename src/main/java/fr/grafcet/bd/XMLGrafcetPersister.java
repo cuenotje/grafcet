@@ -84,7 +84,7 @@ public class XMLGrafcetPersister extends GrafcetBD {
 	GInitialStep istep = XMLObjectFactory.getInstance().createGInitialStep();
 	istep.setGridRowIndex(initialStepUI.getGridRowIndex());
 	istep.setGridColumnIndex(initialStepUI.getGridColumnIndex());
-	istep.setName(initialStepUI.getModel().getName());
+	istep.setName(initialStepUI.getName());
 	return istep;
     }
 

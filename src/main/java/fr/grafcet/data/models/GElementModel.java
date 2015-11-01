@@ -1,6 +1,7 @@
 package fr.grafcet.data.models;
 
 /** Donnée commune à un grafcet */
+@Deprecated
 public abstract class GElementModel implements IGElementModel {
 
     /** Chaine definissent l'element du grafcet */

@@ -6,6 +6,7 @@ import fr.grafcet.ui.elements.GrafcetElementsEnum;
 import fr.grafcet.ui.elements.IElementBuilderCallback;
 import fr.grafcet.util.GrafcetRepository;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -77,13 +78,53 @@ public class TargetDragEventHandler implements EventHandler<DragEvent> {
 	boolean success = false;
 	if (db.hasString()) {
 	    String elementName = db.getString();
-	    System.out.println("onDragDropped: add element of type: " + elementName);
-	    // construction du noeud cible
-	    replaceNode(event, callback.handleBuild(GrafcetElementsEnum.valueOf(elementName), GridPane.getRowIndex(pane), GridPane.getColumnIndex(pane)));
+	    if (elementName.startsWith("moving")) {
+		// déplacement d'un élément existant sur la grille
+		System.out.println("onDragDropped: moving element: " + elementName);
+		movingNode(elementName);
+	    } else {
+		System.out.println("onDragDropped: add element of type: " + elementName);
+		// construction du noeud cible
+		replaceNode(event, callback.handleBuild(GrafcetElementsEnum.getEnum(elementName), GridPane.getRowIndex(pane), GridPane.getColumnIndex(pane)));
+	    }
 	    success = true;
 	}
 	event.setDropCompleted(success);
 	event.consume();
+    }
+
+    private void movingNode(String elementName) {
+	String[] movingElementData = elementName.split(":");
+	int gridElementIndex = Integer.parseInt(movingElementData[1]);
+
+	// element se déplacant
+	GElementUI element = (GElementUI) container.getChildren().get(gridElementIndex);
+
+	// coordonnée d'origin
+	int originRowIndex = element.getGridRowIndex();
+	int originColumnIndex = element.getGridColumnIndex();
+
+	// coordonnée courante de la grille
+	int currentRowIndex = GridPane.getRowIndex(pane);
+	int currentColIndex = GridPane.getColumnIndex(pane);
+
+	element.setGridRowIndex(currentRowIndex);
+	element.setGridColumnIndex(currentColIndex);
+
+	// suppression de la grille de l'element se deplacent
+	container.getChildren().remove(element);
+	// suppression de l'element courant de la grille
+	container.getChildren().remove(pane);
+	// déplacement de l'element source
+	container.add(element, currentColIndex, currentRowIndex);
+	// positionnement du pane courant sur l'emplacement source
+	container.add(pane, originColumnIndex, originRowIndex);
+	// MAJ index sur ecouteur drag and drop
+	for (Node node : container.getChildren()) {
+	    if (node instanceof GElementUI) {
+		((GridElementSourceDragEventHandler) ((GElementUI) node).getOnDragDetected()).updateElementGridIndex(container.getChildren().indexOf(node));
+	    }
+	}
     }
 
     private void replaceNode(DragEvent event, GElementUI newNode) {
@@ -91,10 +132,23 @@ public class TargetDragEventHandler implements EventHandler<DragEvent> {
 	int rowIndex = GridPane.getRowIndex(pane);
 	int colIndex = GridPane.getColumnIndex(pane);
 	container.getChildren().remove(pane);
+	// supprimer listener
+	pane.setOnDragEntered(null);
+	pane.setOnDragExited(null);
+	pane.setOnDragOver(null);
+	pane.setOnDragDropped(null);
+
+	// ajout element à la grille
 	container.add(newNode, colIndex, rowIndex);
+	// ajout listener souris pour le déplacement en drag and drop
+	newNode.setOnDragDetected(new GridElementSourceDragEventHandler(newNode, container.getChildren().indexOf(newNode)));
 	// ajout dans le repository que si etape initiale
 	if (newNode instanceof GInitialStepUI) {
 	    GrafcetRepository.getInstance().addNewGrafcet((GInitialStepUI) newNode);
+	} else{
+	    // raccrochement des elements entre eux
+	    // TODO
+	    // if(newNode instanceof )
 	}
     }
 }

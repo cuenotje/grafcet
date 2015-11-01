@@ -45,6 +45,15 @@
 					</ImageView>
 				</graphic>
 			</ToggleButton>
+    		<ToggleButton fx:id="actionButton" toggleGroup="$myToggleGroup">
+				<graphic>
+					<ImageView>
+						<image>
+							<Image url="/images/action.png"/>
+						</image>                            
+					</ImageView>
+				</graphic>
+			</ToggleButton>
     		<ToggleButton fx:id="transitionButton" toggleGroup="$myToggleGroup">
 				<graphic>
 					<ImageView>

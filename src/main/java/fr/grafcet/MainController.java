@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import fr.grafcet.ui.builder.GrafcetBuilderController;
 import fr.grafcet.ui.dialogs.Dialogs;
+import fr.grafcet.ui.elements.GInitialStepUI;
 import fr.grafcet.util.IGrafcetController;
 import fr.grafcet.util.ViewList;
 import fr.grafcet.util.ViewLoaderHelper;
@@ -50,11 +51,10 @@ public class MainController extends AbstractController implements Initializable 
 	}
 	switch (sourceId) {
 	case "menuNew":
-	    openGrafcetBuilder();
+	    openGrafcetBuilder(null);
 	    break;
 	case "menuOpen":
-	    openGrafcetBuilder();
-	    loadGrafcet();
+	    openGrafcetBuilder(loadGrafcet());
 	    break;
 	case "menuExit":
 	default:
@@ -102,7 +102,7 @@ public class MainController extends AbstractController implements Initializable 
     }
 
     /** Chargement ecran de construction d'un grafcet */
-    private void openGrafcetBuilder() {
+    private void openGrafcetBuilder(GInitialStepUI initialStep) {
 	if (null == builderController) {
 	    try {
 		builderController = (GrafcetBuilderController) ViewLoaderHelper.loadView(ViewList.GRAFCET_BUILDER_VIEW, getStage(), this);
@@ -111,7 +111,9 @@ public class MainController extends AbstractController implements Initializable 
 	    }
 	}
 	if (null != builderController) {
+	    builderController.initGrid();
 	    getStage().setScene(builderController.getScene());
+	    builderController.initProjectNameAndLoadGrafcet(initialStep);
 	}
     }
 
@@ -125,7 +127,8 @@ public class MainController extends AbstractController implements Initializable 
 	return resourceBundle;
     }
 
-    private void loadGrafcet() {
+    private GInitialStepUI loadGrafcet() {
 	// TODO
+	return null;
     }
 }

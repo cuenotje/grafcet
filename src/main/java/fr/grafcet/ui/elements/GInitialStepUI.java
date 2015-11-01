@@ -1,15 +1,16 @@
 package fr.grafcet.ui.elements;
 
-import fr.grafcet.data.models.InitialStepModel;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
 import javafx.scene.text.Text;
 
 /** Etape initiale d'un grafcet */
-public class GInitialStepUI extends GElementUI {
+public class GInitialStepUI extends GAbstractStepUI {
 
-    public GInitialStepUI(InitialStepModel data, int gridRowIndex, int gridColumnIndex) {
-	super(data, gridRowIndex, gridColumnIndex);
+    private String projectName;
+
+    public GInitialStepUI(int gridRowIndex, int gridColumnIndex) {
+	super(gridRowIndex, gridColumnIndex);
     }
 
     public void initShape() {
@@ -23,12 +24,15 @@ public class GInitialStepUI extends GElementUI {
 	Line l = new Line(EDGE_DISTANCE, endOfFirstRectangle, EDGE_DISTANCE, EDGE_DISTANCE * 2);
 	getChildren().add(l);
 
-	Text t = new Text(12, EDGE_DISTANCE + 5, getModel().getName());
+	Text t = new Text(12, EDGE_DISTANCE + 5, getName());
 	getChildren().add(t);
     }
 
-    @Override
-    public InitialStepModel getModel() {
-	return (InitialStepModel) super.getModel();
+    public String getProjectName() {
+	return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+	this.projectName = projectName;
     }
 }

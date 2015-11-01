@@ -1,6 +1,5 @@
 package fr.grafcet.ui.event;
 
-import fr.grafcet.ui.elements.GrafcetElementsEnum;
 import javafx.event.EventHandler;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.ClipboardContent;
@@ -11,11 +10,9 @@ import javafx.scene.input.TransferMode;
 public class SourceDragEventHandler implements EventHandler<MouseEvent> {
 
     private ToggleButton component;
-    private GrafcetElementsEnum type;
 
-    public SourceDragEventHandler(ToggleButton component, GrafcetElementsEnum type) {
+    public SourceDragEventHandler(ToggleButton component) {
 	this.component = component;
-	this.type = type;
     }
 
     public void handle(MouseEvent event) {
@@ -23,7 +20,7 @@ public class SourceDragEventHandler implements EventHandler<MouseEvent> {
 	Dragboard db = component.startDragAndDrop(TransferMode.ANY);
 
 	ClipboardContent content = new ClipboardContent();
-	content.putString(type.name());
+	content.putString(component.getId());
 	db.setContent(content);
 
 	event.consume();
