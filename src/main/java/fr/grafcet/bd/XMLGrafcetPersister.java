@@ -7,33 +7,39 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
-import fr.grafcet.persistence.xml.GInitialStep;
 import fr.grafcet.persistence.xml.Grafcet;
-import fr.grafcet.ui.elements.GInitialStepUI;
 
 /** persistence au format XML dans un dossier "save" */
 public class XMLGrafcetPersister extends GrafcetBD {
 
     private static final String DEFAULT_SAVE_DIR = "save";
 
+    private static Map<ExistingGrafcetDTO, Path> map = new HashMap<ExistingGrafcetDTO, Path>();
+
     @Override
-    public List<GInitialStepUI> getExistingGrafcet() throws IOException {
-	List<GInitialStepUI> results = new ArrayList<GInitialStepUI>();
+    public List<ExistingGrafcetDTO> getExistingGrafcet() throws IOException {
+	List<ExistingGrafcetDTO> results = new ArrayList<ExistingGrafcetDTO>();
 	Path defaultSaveFolder = getDefautlStorePath();
-	if (Files.deleteIfExists(defaultSaveFolder)) {
+	if (Files.exists(defaultSaveFolder)) {
 	    DirectoryStream<Path> stream = Files.newDirectoryStream(defaultSaveFolder);
 	    try {
 		Iterator<Path> iterator = stream.iterator();
 		while (iterator.hasNext()) {
 		    Path p = iterator.next();
-		    System.out.println(p);
+		    ExistingGrafcetDTO dto = new ExistingGrafcetDTO();
+		    dto.setIdentifier(p.toFile().getName());
+		    map.put(dto, p);
+		    results.add(dto);
 		}
 	    } finally {
 		stream.close();
@@ -43,19 +49,27 @@ public class XMLGrafcetPersister extends GrafcetBD {
     }
 
     @Override
-    public void saveGrafcet(GInitialStepUI grafcet, String projectName, File saveDirectory) throws IOException {
-	Path pathToSaved = null;
-	if (null != saveDirectory) {
-	    pathToSaved = Paths.get(saveDirectory.toURI());
-	} else {
-	    pathToSaved = getDefautlStorePath();
+    public GrafcetDTO loadGrafcet(ExistingGrafcetDTO grafcetToLoad) throws IOException {
+	GrafcetDTO result = null;
+	try {
+	    Path path = map.get(grafcetToLoad);
+	    if (null != path) {
+		JAXBContext context = JAXBContext.newInstance(Grafcet.class);
+		Unmarshaller m = context.createUnmarshaller();
+		Grafcet grafcet = (Grafcet) m.unmarshal(path.toFile());
+		result = XMLObjectConverter.convertToObject(grafcet);
+	    }
+	} catch (JAXBException e) {
+	    throw new IOException("Erreur de transformation objet -> xml.", e);
 	}
-	// Sérialisation des grafcets
-	persists(convertToXmlObject(grafcet), pathToSaved, projectName);
+	return result;
     }
 
-    private void persists(Grafcet grafcet, Path outputDir, String projectName) throws IOException {
+    @Override
+    public void saveGrafcet(GrafcetDTO grafcetProject, File saveDirectory) throws IOException {
 	try {
+	    Grafcet grafcet = XMLObjectConverter.convertToXmlObject(grafcetProject);
+
 	    JAXBContext context = JAXBContext.newInstance(Grafcet.class);
 	    Marshaller m = context.createMarshaller();
 	    // formattage du xml
@@ -65,27 +79,21 @@ public class XMLGrafcetPersister extends GrafcetBD {
 	    // m.marshal(grafcet, System.out);
 
 	    // ecriture du fichier
-	    Path filePath = outputDir.resolve(projectName + ".xml");
+	    Path filePath = getPathToSaved(saveDirectory).resolve(grafcet.getProjectName() + ".xml");
 	    m.marshal(grafcet, filePath.toFile());
 	} catch (JAXBException e) {
-	    new IOException("Erreur de transformation objet -> xml.", e);
+	    throw new IOException("Erreur de transformation objet -> xml.", e);
 	}
     }
 
-    private Grafcet convertToXmlObject(GInitialStepUI grafcet) {
-	Grafcet g = XMLObjectFactory.getInstance().createGrafcet();
-	GInitialStep initialStep = convertInitialStepUI(grafcet);
-	// FIXME gerer le parsing de tout le grafcet
-	g.setInitialStep(initialStep);
-	return g;
-    }
-
-    private GInitialStep convertInitialStepUI(GInitialStepUI initialStepUI) {
-	GInitialStep istep = XMLObjectFactory.getInstance().createGInitialStep();
-	istep.setGridRowIndex(initialStepUI.getGridRowIndex());
-	istep.setGridColumnIndex(initialStepUI.getGridColumnIndex());
-	istep.setName(initialStepUI.getName());
-	return istep;
+    private Path getPathToSaved(File saveDirectory) throws IOException {
+	Path pathToSaved = null;
+	if (null != saveDirectory) {
+	    pathToSaved = Paths.get(saveDirectory.toURI());
+	} else {
+	    pathToSaved = getDefautlStorePath();
+	}
+	return pathToSaved;
     }
 
     private Path getDefautlStorePath() throws IOException {

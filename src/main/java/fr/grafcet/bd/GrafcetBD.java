@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import fr.grafcet.ui.elements.GInitialStepUI;
-
 /** gestion de la persistence d'un grafcet */
 public abstract class GrafcetBD {
 
@@ -18,9 +16,12 @@ public abstract class GrafcetBD {
 	return instance;
     }
 
-    /** lecture de grafcet */
-    public abstract List<GInitialStepUI> getExistingGrafcet() throws IOException;
+    /** liste les grafcets sauvegardé */
+    public abstract List<ExistingGrafcetDTO> getExistingGrafcet() throws IOException;
+
+    /** Charge le grafcet */
+    public abstract GrafcetDTO loadGrafcet(ExistingGrafcetDTO grafcetToLoad) throws IOException;
 
     /** sauvegarde de grafcet */
-    public abstract void saveGrafcet(GInitialStepUI grafcet, String projectName, File saveDirectory) throws IOException;
+    public abstract void saveGrafcet(GrafcetDTO grafcetProject, File saveDirectory) throws IOException;
 }

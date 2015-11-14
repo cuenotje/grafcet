@@ -1,10 +1,9 @@
 package fr.grafcet.ui.event;
 
 import fr.grafcet.ui.elements.GElementUI;
-import fr.grafcet.ui.elements.GInitialStepUI;
 import fr.grafcet.ui.elements.GrafcetElementsEnum;
 import fr.grafcet.ui.elements.IElementBuilderCallback;
-import fr.grafcet.util.GrafcetRepository;
+import fr.grafcet.util.GridPaneHelper;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.DragEvent;
@@ -85,7 +84,11 @@ public class TargetDragEventHandler implements EventHandler<DragEvent> {
 	    } else {
 		System.out.println("onDragDropped: add element of type: " + elementName);
 		// construction du noeud cible
-		replaceNode(event, callback.handleBuild(GrafcetElementsEnum.getEnum(elementName), GridPane.getRowIndex(pane), GridPane.getColumnIndex(pane)));
+
+		int rowIndex = GridPane.getRowIndex(pane);
+		int colIndex = GridPane.getColumnIndex(pane);
+		GElementUI elementui = callback.handleBuild(GrafcetElementsEnum.getEnum(elementName), rowIndex, colIndex);
+		GridPaneHelper.replaceNode(elementui, rowIndex, colIndex, container);
 	    }
 	    success = true;
 	}
@@ -124,31 +127,6 @@ public class TargetDragEventHandler implements EventHandler<DragEvent> {
 	    if (node instanceof GElementUI) {
 		((GridElementSourceDragEventHandler) ((GElementUI) node).getOnDragDetected()).updateElementGridIndex(container.getChildren().indexOf(node));
 	    }
-	}
-    }
-
-    private void replaceNode(DragEvent event, GElementUI newNode) {
-	System.out.println("Current Pane: " + pane + " at " + GridPane.getRowIndex(pane) + "/" + GridPane.getColumnIndex(pane));
-	int rowIndex = GridPane.getRowIndex(pane);
-	int colIndex = GridPane.getColumnIndex(pane);
-	container.getChildren().remove(pane);
-	// supprimer listener
-	pane.setOnDragEntered(null);
-	pane.setOnDragExited(null);
-	pane.setOnDragOver(null);
-	pane.setOnDragDropped(null);
-
-	// ajout element à la grille
-	container.add(newNode, colIndex, rowIndex);
-	// ajout listener souris pour le déplacement en drag and drop
-	newNode.setOnDragDetected(new GridElementSourceDragEventHandler(newNode, container.getChildren().indexOf(newNode)));
-	// ajout dans le repository que si etape initiale
-	if (newNode instanceof GInitialStepUI) {
-	    GrafcetRepository.getInstance().addNewGrafcet((GInitialStepUI) newNode);
-	} else{
-	    // raccrochement des elements entre eux
-	    // TODO
-	    // if(newNode instanceof )
 	}
     }
 }

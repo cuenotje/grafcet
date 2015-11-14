@@ -1,11 +1,17 @@
 package fr.grafcet.ui.builder;
 
 import fr.grafcet.AbstractController;
+import fr.grafcet.bd.GrafcetDTO;
+import fr.grafcet.exception.NonValideGrafcet;
+import fr.grafcet.ui.dialogs.Dialogs;
 import fr.grafcet.ui.elements.ElementBuilderController;
+import fr.grafcet.ui.elements.GElementUI;
 import fr.grafcet.ui.elements.GInitialStepUI;
 import fr.grafcet.ui.event.SourceDragEventHandler;
 import fr.grafcet.ui.event.TargetDragEventHandler;
 import fr.grafcet.ui.event.TargetDragEventHandler.DragPhase;
+import fr.grafcet.util.GrafcetRepository;
+import fr.grafcet.util.GridPaneHelper;
 import fr.grafcet.util.IGrafcetController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -52,6 +58,8 @@ public class GrafcetBuilderController extends AbstractController {
 
     public void initGrid() {
 	getScene().setCursor(Cursor.WAIT);
+	// nettoyage
+	cleanGrid();
 	// builderGridPane.setGridLinesVisible(true);
 	// initialisation de la grille et de la target pour le drag and drop
 	for (int i = 0; i < V_GRID_SIZE; i++) {
@@ -93,12 +101,15 @@ public class GrafcetBuilderController extends AbstractController {
 	// sauvegarde grafcet en cours
 	// TODO
 	// suppression des listeners sur la grille
-	cleanGridListener();
+	cleanGrid();
 	// retour ecran d'accueil
 	closeView();
     }
 
-    private void cleanGridListener() {
+    /**
+     * Suppression des listeners, contraintes et element de la grille.
+     */
+    private void cleanGrid() {
 	builderGridPane.getColumnConstraints().clear();
 	builderGridPane.getRowConstraints().clear();
 	for (Node node : builderGridPane.getChildren()) {
@@ -108,6 +119,31 @@ public class GrafcetBuilderController extends AbstractController {
 	    node.setOnDragDropped(null);
 	}
 	builderGridPane.getChildren().clear();
+    }
+
+    public void initProjectNameAndLoadGrafcet(GrafcetDTO grafcet) {
+	String projectName = null;
+	if (null != grafcet) {
+	    projectName = grafcet.getProjectName();
+	    // chargement du grafcet
+	    // element non validé
+	    if (!grafcet.getNonValidateElements().isEmpty()) {
+		for (GElementUI element : grafcet.getNonValidateElements()) {
+		    GridPaneHelper.replaceNode(element, element.getGridRowIndex(), element.getGridColumnIndex(), builderGridPane);
+		}
+	    } else if (null != grafcet.getValidateGrafcet()) {
+		// FIXME remplir la grille avec un grafcet validé
+	    } else {
+		// no grafcet elements
+	    }
+	}
+	// nommage du projet
+	getPersistenceController().initProject(projectName);
+    }
+
+    private void validateGrafcet() throws NonValideGrafcet {
+	GInitialStepUI grafcet = GridPaneHelper.validateGrafcet(builderGridPane);
+	GrafcetRepository.getInstance().addValidGrafcet(grafcet);
     }
 
     @FXML
@@ -120,14 +156,24 @@ public class GrafcetBuilderController extends AbstractController {
 	getPersistenceController().saveTo();
     }
 
-    public void initProjectNameAndLoadGrafcet(GInitialStepUI initialStep) {
-	String projectName = null;
-	if (null != initialStep) {
-	    projectName = initialStep.getProjectName();
-	    // chargement du grafcet
-	    // FIXME
+    @FXML
+    private void handleSimulate(final ActionEvent event) {
+	try {
+	    // lancer une validation du grafcet pour creer les liens entre les
+	    // elements avant de démarrer la simulation
+	    validateGrafcet();
+	    // FIXME demarrage de la simulation
+	} catch (NonValideGrafcet e) {
+	    Dialogs.showErrorDialog(getStage(), "Erreur de validatio du grafcet.", e.getErrorRootCause(), "Erreur de validation.", e);
 	}
-	// nommage du projet
-	getPersistenceController().initProject(projectName);
+    }
+
+    @FXML
+    private void handleValidate(final ActionEvent event) {
+	try {
+	    validateGrafcet();
+	} catch (NonValideGrafcet e) {
+	    Dialogs.showErrorDialog(getStage(), "Erreur de validatio du grafcet.", e.getErrorRootCause(), "Erreur de validation.", e);
+	}
     }
 }

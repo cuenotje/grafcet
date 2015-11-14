@@ -1,78 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Grafcet"
-	xmlns:tns="http://www.example.org/Grafcet" elementFormDefault="qualified">
-	<complexType name="GAbstractStep">
-		<complexContent>
-			<extension base="tns:GGridCoordonate">
-				<attribute name="name" type="string" use="required"></attribute>
-			</extension>
-		</complexContent>
-	</complexType>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	jaxb:extensionBindingPrefixes="xjc" jaxb:version="1.0"
+	elementFormDefault="qualified">
+	<xs:annotation>
+		<xs:appinfo>
+			<jaxb:globalBindings generateIsSetMethod="true">
+				<xjc:serializable />
+			</jaxb:globalBindings>
+		</xs:appinfo>
+	</xs:annotation>
 
-	<complexType name="GInitialStep">
-		<complexContent>
-			<extension base="tns:GAbstractStep"></extension>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="AbstractStep">
+		<xs:complexContent>
+			<xs:extension base="GridCoordonate">
+				<xs:attribute name="name" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<complexType name="GTransition">
-		<complexContent>
-			<extension base="tns:GGridCoordonate">
-				<sequence>
-					<element name="condition" type="string"></element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="InitialStep">
+		<xs:complexContent>
+			<xs:extension base="AbstractStep" />
+		</xs:complexContent>
+	</xs:complexType>
 
-	<complexType name="GAction">
-		<complexContent>
-			<extension base="tns:GGridCoordonate"></extension>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="Transition">
+		<xs:complexContent>
+			<xs:extension base="GridCoordonate">
+				<xs:sequence>
+					<xs:element name="condition" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<complexType name="GStep">
-		<complexContent>
-			<extension base="tns:GAbstractStep">
-				<sequence>
-					<element name="action" type="tns:GAction"></element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:complexType name="StepAction">
+		<xs:complexContent>
+			<xs:extension base="GridCoordonate">
+				<xs:sequence>
+					<xs:element name="action" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<complexType name="GGridCoordonate">
-		<attribute name="gridRowIndex" use="required">
-			<simpleType>
-				<restriction base="int">
-					<minExclusive value="0"></minExclusive>
-					<maxExclusive value="20"></maxExclusive>
-				</restriction>
-			</simpleType>
-		</attribute>
-		<attribute name="gridColumnIndex" use="required">
-			<simpleType>
-				<restriction base="int">
-					<minExclusive value="0"></minExclusive>
-					<maxExclusive value="20"></maxExclusive>
-				</restriction>
-			</simpleType>
-		</attribute>
-	</complexType>
+	<xs:complexType name="Step">
+		<xs:complexContent>
+			<xs:extension base="AbstractStep">
+				<xs:sequence>
+					<xs:element name="action" type="StepAction" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<element name="Grafcet">
-		<complexType>
-			<sequence>
-				<element name="InitialStep" type="tns:GInitialStep" />
-				<sequence maxOccurs="unbounded">
-					<choice>
-						<element name="Transition" type="tns:GTransition" />
-						<element name="OrTransition" type="string" />
-						<element name="AndTransition" type="string" />
-					</choice>
-					<element name="step" type="tns:GStep" />
-				</sequence>
-			</sequence>
-		</complexType>
-	</element>
-</schema>
+	<xs:complexType name="GridCoordonate">
+		<xs:attribute name="gridRowIndex" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minExclusive value="0"></xs:minExclusive>
+					<xs:maxExclusive value="20"></xs:maxExclusive>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="gridColumnIndex" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minExclusive value="0"></xs:minExclusive>
+					<xs:maxExclusive value="20"></xs:maxExclusive>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="ValidGrafcet">
+		<xs:sequence>
+			<xs:element name="InitialStep" type="InitialStep" />
+			<xs:sequence maxOccurs="unbounded">
+				<xs:choice>
+					<xs:element name="Transition" type="Transition" />
+					<xs:element name="OrTransition" type="xs:string" />
+					<xs:element name="AndTransition" type="xs:string" />
+				</xs:choice>
+				<xs:element name="step" type="Step" />
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="NonValidGrafcet">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="InitialStep" type="InitialStep" />
+			<xs:element name="Transition" type="Transition" />
+			<xs:element name="OrTransition" type="xs:string" />
+			<xs:element name="AndTransition" type="xs:string" />
+			<xs:element name="step" type="Step" />
+			<xs:element name="action" type="StepAction" />
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:element name="Grafcet">
+		<xs:complexType>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="NonValidGrafcet" type="NonValidGrafcet" />
+				<xs:element name="ValidGrafcet" type="ValidGrafcet" />
+			</xs:choice>
+			<xs:attribute name="projectName" use="required" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

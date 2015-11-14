@@ -1,8 +1,10 @@
 package fr.grafcet;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import fr.grafcet.bd.GrafcetDTO;
 import fr.grafcet.ui.builder.GrafcetBuilderController;
 import fr.grafcet.ui.dialogs.Dialogs;
 import fr.grafcet.ui.elements.GInitialStepUI;
@@ -54,7 +56,11 @@ public class MainController extends AbstractController implements Initializable 
 	    openGrafcetBuilder(null);
 	    break;
 	case "menuOpen":
-	    openGrafcetBuilder(loadGrafcet());
+	    try {
+		openGrafcetBuilder(loadGrafcet());
+	    } catch (IOException e) {
+		Dialogs.showErrorDialog(getStage(), "Erreur de chargement du grafcet.", e.getMessage(), "Chargement d'un grafcet", e);
+	    }
 	    break;
 	case "menuExit":
 	default:
@@ -102,7 +108,7 @@ public class MainController extends AbstractController implements Initializable 
     }
 
     /** Chargement ecran de construction d'un grafcet */
-    private void openGrafcetBuilder(GInitialStepUI initialStep) {
+    private void openGrafcetBuilder(GrafcetDTO grafcet) {
 	if (null == builderController) {
 	    try {
 		builderController = (GrafcetBuilderController) ViewLoaderHelper.loadView(ViewList.GRAFCET_BUILDER_VIEW, getStage(), this);
@@ -113,7 +119,7 @@ public class MainController extends AbstractController implements Initializable 
 	if (null != builderController) {
 	    builderController.initGrid();
 	    getStage().setScene(builderController.getScene());
-	    builderController.initProjectNameAndLoadGrafcet(initialStep);
+	    builderController.initProjectNameAndLoadGrafcet(grafcet);
 	}
     }
 
@@ -127,8 +133,7 @@ public class MainController extends AbstractController implements Initializable 
 	return resourceBundle;
     }
 
-    private GInitialStepUI loadGrafcet() {
-	// TODO
-	return null;
+    private GrafcetDTO loadGrafcet() throws IOException {
+	return getPersistenceController().openGrafcet();
     }
 }

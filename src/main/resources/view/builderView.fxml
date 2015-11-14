@@ -15,7 +15,8 @@
                 <Button text="%builder.button.save" onAction="#handleSave"/>
                 <Button text="%builder.button.saveto" styleClass="first" onAction="#handleSaveTo" />
 	            <Region styleClass="spacer" />
-                <Button text="%builder.button.simulate" styleClass="last" />
+                <Button text="%builder.button.validate" styleClass="last" onAction="#handleValidate" />
+                <Button text="%builder.button.simulate" styleClass="last" onAction="#handleSimulate" />
 	            <Region styleClass="spacer" />
                 <Button text="%builder.button.exit" onAction="#handleGoBack"/>
             </HBox>
